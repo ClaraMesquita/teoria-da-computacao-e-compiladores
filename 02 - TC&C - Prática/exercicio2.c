@@ -17,8 +17,8 @@ void lerSequenciaEArmazenarEmArquivo(FILE *arquivo, int *tamanho) {
     }
 
     printf("Digite os elementos da sequência:\n");
+    int elemento;
     for (int i = 0; i < n; i++) {
-        int elemento;
         scanf("%d", &elemento);
         fprintf(arquivo, "%d ", elemento);
     }
@@ -208,9 +208,8 @@ void calcularDiferenca(int conjuntoA[], int tamanhoA, int conjuntoB[], int taman
             diferenca[tamanhoDiferenca++] = conjuntoA[i];
         }
     }
-
-    // Apresentar a diferença na tela
     printf("Diferença de: { ");
+    fprintf(arquivo, "Diferença de: { ");
     for (int i = 0; i < tamanhoDiferenca; i++) {
         printf("%d ", diferenca[i]);
         fprintf(arquivo, "%d ", diferenca[i]);
@@ -219,6 +218,26 @@ void calcularDiferenca(int conjuntoA[], int tamanhoA, int conjuntoB[], int taman
     fprintf(arquivo, "}\n");
 }
 
+
+// Função para calcular e armazenar o produto cartesiano de dois conjuntos
+void calcularProdutoCartesiano(int conjuntoA[], int tamanhoA, int conjuntoB[], int tamanhoB, FILE *arquivo) {
+    // Armazenar o produto cartesiano no arquivo
+    fprintf(arquivo, "Produto Cartesiano:\n");
+
+    // Calcular e apresentar o produto cartesiano na tela
+    printf("Produto Cartesiano de A e B:\n");
+    for (int i = 0; i < tamanhoA; i++) {
+        for (int j = 0; j < tamanhoB; j++) {
+            printf("(%d, %d) ", conjuntoA[i], conjuntoB[j]);
+            fprintf(arquivo, "(%d, %d) ", conjuntoA[i], conjuntoB[j]);
+        }
+        printf("\n");
+        fprintf(arquivo, "\n");
+    }
+}
+
+
+// ########## MAIN #####################################################################################################
 
 int main() {
     FILE *arquivo = fopen("arquivo.txt", "w+");
@@ -294,6 +313,13 @@ int main() {
     
     calcularDiferenca(conjuntoA, tamanhoConjuntoA, conjuntoB, tamanhoConjuntoB, arquivo);
     calcularDiferenca(conjuntoB, tamanhoConjuntoB, conjuntoA, tamanhoConjuntoA, arquivo);
+
+    //
+
+    calcularProdutoCartesiano(conjuntoA, tamanhoConjuntoA, conjuntoB, tamanhoConjuntoB, arquivo);
+    calcularProdutoCartesiano(conjuntoB, tamanhoConjuntoB, conjuntoA, tamanhoConjuntoA, arquivo);
+
+
 
     // Liberar memória alocada dinamicamente
     free(sequencia1);
