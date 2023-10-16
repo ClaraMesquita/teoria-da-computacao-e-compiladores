@@ -81,10 +81,9 @@ void exibirConjunto(int conjunto[], int tamanho, const char *nomeConjunto) {
     printf("\n");
 }
 
-void armazenarConjuntoEmArquivo(int conjunto[], int tamanho, const char *nomeArquivo) {
-    FILE *arquivo = fopen(nomeArquivo, "w");
+void armazenarConjuntoEmArquivo(int conjunto[], int tamanho,  FILE *arquivo) {
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
+        printf("Erro ao abrir o arquivo %s\n", arquivo);
         return;
     }
 
@@ -95,8 +94,24 @@ void armazenarConjuntoEmArquivo(int conjunto[], int tamanho, const char *nomeArq
     fclose(arquivo);
 }
 
+void calcularConjuntoPotencia(int conjunto[], int tamanho, FILE *arquivo) {
+    int totalSubconjuntos = pow(2, tamanho);
+
+    for (int i = 0; i < totalSubconjuntos; i++) {
+        fprintf(arquivo, "{ ");
+
+        for (int j = 0; j < tamanho; j++) {
+            if ((i & (1 << j)) != 0) {
+                fprintf(arquivo, "%d ", conjunto[j]);
+            }
+        }
+
+        fprintf(arquivo, "}\n");
+    }
+}
+
 int main() {
-    FILE *arquivo = fopen("sequencias.txt", "w+");
+    FILE *arquivo = fopen("arquivo.txt", "w+");
     
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -131,7 +146,7 @@ int main() {
     
     //
     int tamanhoA, tamanhoB, tamanhoConjuntoA, tamanhoConjuntoB;
-    int conjuntoA[], conjuntoB[];
+    int *conjuntoA, *conjuntoB;
     
     gerarConjunto(sequencia1, tamanho1, conjuntoA, &tamanhoConjuntoA);
     gerarConjunto(sequencia2, tamanho2, conjuntoB, &tamanhoConjuntoB);
@@ -139,12 +154,25 @@ int main() {
     exibirConjunto(conjuntoA, tamanhoConjuntoA, "A");
     exibirConjunto(conjuntoB, tamanhoConjuntoB, "B");
 
-    armazenarConjuntoEmArquivo(conjuntoA, tamanhoConjuntoA, "sequenciaA.txt");
-    armazenarConjuntoEmArquivo(conjuntoB, tamanhoConjuntoB, "sequenciaB.txt");
+    armazenarConjuntoEmArquivo(conjuntoA, tamanhoConjuntoA, arquivo);
+    armazenarConjuntoEmArquivo(conjuntoB, tamanhoConjuntoB, arquivo);
+
+    //
+
+    fprintf(arquivo, "Conjunto potência de A:\n");
+    calcularConjuntoPotencia(conjuntoA, tamanhoA, arquivo);
+
+    fprintf(arquivo, "\nConjunto potência de B:\n");
+    calcularConjuntoPotencia(conjuntoB, tamanhoB, arquivo);
+
+    //
+
+    
 
 
-
-
+    // Liberar memória alocada dinamicamente
+    free(conjuntoA);
+    free(conjuntoB);
     
     free(sequencia1);
     free(sequencia2);
