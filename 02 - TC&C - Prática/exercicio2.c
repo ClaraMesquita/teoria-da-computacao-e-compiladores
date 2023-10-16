@@ -84,13 +84,12 @@ void armazenarConjuntoEmArquivo(int conjunto[], int tamanho, FILE *arquivo) {
         return;
     }
 
-    fprintf(arquivo, "%d\n", tamanho);
-
+    fprintf(arquivo, "\n");
+    fprintf(arquivo, "{");
     for (int i = 0; i < tamanho; i++) {
         fprintf(arquivo, "%d ", conjunto[i]);
     }
-
-    fprintf(arquivo, "\n");
+    fprintf(arquivo, "}\n");
 }
 
 void calcularConjuntoPotencia(int conjunto[], int tamanho, FILE *arquivo) {
