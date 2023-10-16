@@ -1,141 +1,140 @@
-/*
-Implemente um grafo rotulado G = { N, R, A } em que:
-a. N é o conjunto de vértices (nós ou nodos).
-b. R é o conjunto de rótulos.
-c. A é uma relação N x N x R (aresta, arcos).
-O grafo deve ser representado em uma matriz que armazene a distância das estradas que
-ligam 4 cidades vizinhas. O algoritmo deve:
-1. Possuir um procedimento não recursivo para inserir a distância entre duas cidades
-na matriz.
-2. Possuir um procedimento não recursivo para contar quantas estradas ligam as
-cidades.
-3. Possuir um procedimento não recursivo para imprimir a matriz.
-4. Possuir uma função recursiva que receba a identificação de duas cidades como
-parâmetro e:
-o Retorne a distância entre as cidades se houver uma estrada entre elas.
-o Retorne zero se não houver uma estrada ligando as cidades.
-*/
-
-
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#define NUM_CITY 4
 
-#define MAX_CIDADES 4
+int aloc(int ***matrix);
+void init_matrix(int **matrix);
+void show_matrix(int **matrix);
+int cityDistance(int **matrix, int city_a, int city_b, bool ac_city[NUM_CITY]);
 
-// Definir o grafo e as cidades
-int grafo[MAX_CIDADES][MAX_CIDADES];
+int main(int argc, char const *argv[])
+{
+    int **city_matrix, city_a, city_b, distance;
+    bool visited[NUM_CITY] = {false};
 
-// Função para inserir a distância entre duas cidades na matriz
-void inserirDistancia(int cidade1, int cidade2, int distancia) {
-    grafo[cidade1][cidade2] = distancia;
-    grafo[cidade2][cidade1] = distancia; // Como é um grafo não direcionado, atualize a distância nos dois sentidos
+    aloc(&city_matrix);
+    init_matrix(city_matrix);
+    show_matrix(city_matrix);
+
+    printf("\nInforme a primeira cidade ");
+    scanf("%i", &city_a);
+    printf("\nInforme a segunda cidade ");
+    scanf("%i", &city_b);
+
+    distance = cityDistance(city_matrix, city_a, city_b, visited);
+
+    printf("\nDistancia entre as cidades = %i", distance);
+
+    return 0;
 }
 
-// Função para contar quantas estradas ligam as cidades
-int contarEstradas(int cidade) {
-    int contador = 0;
-    for (int i = 0; i < MAX_CIDADES; i++) {
-        if (grafo[cidade][i] > 0) {
-            contador++;
-        }
-    }
-    return contador;
-}
-
-// Função para imprimir a matriz com rótulos de linha e coluna
-void imprimirMatriz() {
-    // Imprimir rótulos das colunas
-    printf("    ");
-    for (int j = 0; j < MAX_CIDADES; j++) {
-        printf("%-4d", j);
-    }
-    printf("\n");
-
-    // Imprimir separador
-    printf("    ");
-    for (int j = 0; j < MAX_CIDADES; j++) {
-        printf("----");
-    }
-    printf("\n");
-
-    // Imprimir matriz com rótulos de linha
-    for (int i = 0; i < MAX_CIDADES; i++) {
-        printf("%-2d |", i);
-        for (int j = 0; j < MAX_CIDADES; j++) {
-            printf("%-4d", grafo[i][j]);
+void show_matrix(int **matrix)
+{
+    printf("\n\n");
+    for (int i = -1; i < NUM_CITY; i++)
+    {
+        for (int j = -1; j < NUM_CITY; j++)
+        {
+            if (i == -1 && j == -1)
+            {
+                printf("    |");
+            }
+            else if (i == -1)
+            {
+                printf("%4d|", j);
+            }
+            else if (j == -1)
+            {
+                printf("%4d|", i);
+            }
+            else
+            {
+                printf("%4d|", matrix[i][j]);
+            }
         }
         printf("\n");
+        if (i == -1)
+        {
+            for (int j = 0; j < NUM_CITY + 1; j++)
+            {
+                printf("------");
+            }
+            printf("\n");
+        }
     }
 }
 
-
-// Função recursiva para obter a distância entre duas cidades
-int obterDistanciaRecursiva(int cidadeOrigem, int cidadeDestino) {
-    if (cidadeOrigem == cidadeDestino){
+int aloc(int ***matrix)
+{
+    *matrix = (int **)calloc(NUM_CITY, sizeof(int *));
+    if (*matrix == NULL)
+    {
         return 0;
     }
-    // Base da recursão: se há uma distância direta, retorne essa distância
-    if (grafo[cidadeOrigem][cidadeDestino] > 0) {
-        return grafo[cidadeOrigem][cidadeDestino];
+
+    for (int i = 0; i < NUM_CITY; i++)
+    {
+        (*matrix)[i] = (int *)calloc(NUM_CITY, sizeof(int));
+        if ((*matrix)[i] == NULL)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                free((*matrix)[j]);
+            }
+            free(*matrix);
+            return 0;
+        }
     }
-    
-    // Caso contrário, explore outros caminhos
-    for (int i = 0; i < MAX_CIDADES; ++i) {
-        if (grafo[cidadeOrigem][i] > 0) {
-            int distanciaIntermediaria = obterDistanciaRecursiva(i, cidadeDestino);
-            if (distanciaIntermediaria > 0) {
-                // Se encontrarmos uma distância intermediária, retorne a soma das distâncias
-                return grafo[cidadeOrigem][i] + distanciaIntermediaria;
+
+    return 1;
+}
+
+void init_matrix(int **matrix)
+{
+    for (int i = 0; i < NUM_CITY; i++)
+    {
+        for (int j = 0; j < NUM_CITY; j++)
+        {
+            // Input para o exemplo do exercicio = 4 0 5 2 4 3
+            if (i == j)
+            {
+                matrix[i][j] == 0;
+            }
+            else if (i > j)
+            {
+                matrix[i][j] = matrix[j][i];
+            }
+            else
+            {
+                printf("Distancia entre cidade %i e %i = ", i, j);
+                scanf("%i", &matrix[i][j]);
+            }
+        }
+    }
+}
+
+int cityDistance(int **matrix, int city_a, int city_b, bool ac_city[NUM_CITY])
+{
+    if (city_a == city_b)
+    {
+        return 0;
+    }
+
+    ac_city[city_a] = true; // Troca a cidade como visitada
+    int minDistance = 0;
+
+    for (int i = 0; i < NUM_CITY; i++)
+    {
+        if (!ac_city[i] && matrix[city_a][i] != 0)
+        {
+            int currentDistance = matrix[city_a][i] + cityDistance(matrix, i, city_b, ac_city);
+            if (currentDistance < minDistance || minDistance == 0)
+            {
+                minDistance = currentDistance;
             }
         }
     }
 
-    // Se nenhum caminho for encontrado, retorne 0
-    return 0;
-}
-
-
-int main() {
-
-    // Inicialize o grafo
-    for (int i = 0; i < MAX_CIDADES; i++) {
-        for (int j = 0; j < MAX_CIDADES; j++) {
-            grafo[i][j] = 0;
-        }
-    }
-
-    // Insira distâncias entre cidades
-    inserirDistancia(0, 1, 4);
-    inserirDistancia(1, 2, 2);
-    inserirDistancia(2, 3, 3);
-    inserirDistancia(0, 3, 5);
-
-    // Imprima a matriz
-    printf("Matriz de distâncias:\n");
-    imprimirMatriz();
-
-    int cidade,cidadeDestino,cidadeOrigem;
-
-    // Solicita ao usuário informar a cidades
-    printf("Informe a cidade para contar as estradas: ");
-    scanf("%d", &cidade);
-
-    // Conte as estradas que ligam a cidade 
-    int estradasCidade = contarEstradas(cidade);
-    printf("Cidade %d tem %d estradas ligadas.\n", cidade ,estradasCidade);
-
-
-    // Solicitar ao usuário informar as cidades
-    printf("Informe a cidade de origem: ");
-    scanf("%d", &cidadeOrigem);
-
-    printf("Informe a cidade de destino: ");
-    scanf("%d", &cidadeDestino);
-
-
-    // Obtenha a distância entre cidades
-    int distancia = obterDistanciaRecursiva(cidadeOrigem, cidadeDestino);
-    printf("A distância entre cidade %d e cidade %d é %d.\n", cidadeOrigem, cidadeDestino, distancia);
-
-    return 0;
+    return minDistance;
 }

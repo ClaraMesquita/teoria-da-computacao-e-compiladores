@@ -1,44 +1,61 @@
+#include <stdio.h>
 
-int calcularResultado(int n) {
-    if (n % 2 == 0) {
-        return -n / 2;
-    } else {
-        return n / 2 + 1;
-    }
-}
+void non_recursively(int rep);
+void recursively(int rep);
 
-void imprimirResultadosRecursivo(int atual, int limite) {
-    if (atual <= limite) {
-        printf("[%d, %d], ", atual, calcularResultado(atual));
-        imprimirResultadosRecursivo(atual + 1, limite);
-    }
-}
+int main(int argc, char const *argv[])
+{
+    int rep;
 
-int main() {
-    int limite;
-    printf("Informe o limite:");
-    scanf("%d", &limite);
+    printf("Informe o numero de repeticoes ");
+    scanf("%i", &rep);
 
-    printf("\n");
-    printf("Recursiva:");
-    printf("\n");
-    imprimirResultadosRecursivo(0, limite);
+    printf("\nImpressao com chamada nao recursiva\n");
+    non_recursively(rep);
 
-    printf("\n");
-    printf("Não recursiva:");
-    printf("\n");
-
-    for (int n = 0; n <= limite; n++) {
-        int resultado;
-
-        if (n % 2 == 0) {
-            resultado = -n / 2;
-        } else {
-            resultado = n / 2 + 1;
-        }
-
-        printf("[%d, %d], ", n, resultado);
-    }
+    printf("\n\nImpressao com chamada recursiva\n");
+    recursively(rep);
 
     return 0;
+}
+
+void non_recursively(int rep)
+{
+    int conj;
+
+    for (size_t i = 0; i <= rep; i++)
+    {
+        if (i % 2 == 0)
+        {
+            conj = (i / 2) * -1;
+        }
+        else
+        {
+            conj = (i / 2) + 1;
+        }
+        printf("[%i, %i], ", i, conj);
+    }
+}
+
+void recursively(int rep)
+{
+    int conj;
+
+    if (rep == 0)
+    {
+        conj = (rep / 2) * -1;
+        printf("[%i, %i], ", rep, conj);
+    }
+    else if (rep % 2 == 0)
+    {
+        conj = (rep / 2) * -1;
+        recursively(rep - 1);
+        printf("[%i, %i], ", rep, conj);
+    }
+    else
+    {
+        conj = (rep / 2) + 1;
+        recursively(rep - 1);
+        printf("[%i, %i], ", rep, conj);
+    }
 }

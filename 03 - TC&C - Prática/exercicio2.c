@@ -1,33 +1,46 @@
 #include <stdio.h>
 
-// Função sucessor
-int sucessor(int n) {
-    return n + 1;
-}
+int sum_rec(int num1, int num2);
 
-// Função de soma
-int soma(int m, int n) {
-    // Base: se n = 0, então m + n = m
-    if (n == 0) {
-        return m;
-    } else {
-        // Passo recursivo: m + s(n) = s(m + n)
-        return soma(sucessor(m), n - 1);
-    }
-}
+int main(int argc, char const *argv[])
+{
+    int num1, num2, sum;
 
-int main() {
-    int num1, num2;
-
-    printf("Informe o primeiro número: ");
-    scanf("%d", &num1);
-
-    printf("Informe o segundo número: ");
-    scanf("%d", &num2);
-
-    int resultado = soma(num1, num2);
-
-    printf("O resultado da soma é: %d\n", resultado);
+    printf("Informe os numeros a serem somados ");
+    scanf("%i", &num1);
+    scanf("%i", &num2);
+    sum = sum_rec(num1, num2);
+    printf("\nValor da some = %i", sum);
 
     return 0;
+}
+
+int sum_rec(int num1, int num2)
+{
+    if (num1 == 0 && num2 == 0)
+    {
+        return 0;
+    }
+    else if (num2 == 0)
+    {
+        if (num1 > 0)
+        {
+            return 1 + sum_rec(num1 - 1, num2);
+        }
+        else
+        {
+            return -1 + sum_rec(num1 + 1, num2);
+        }
+    }
+    else
+    {
+        if (num2 > 0)
+        {
+            return 1 + sum_rec(num1, num2 - 1);
+        }
+        else
+        {
+            return -1 + sum_rec(num1, num2 + 1);
+        }
+    }
 }
