@@ -29,7 +29,7 @@ int main() {
 
     // Verifica se o expoente é negativo
     if (expoente < 0) {
-        printf("O expoente deve ser não negativo para este algoritmo.\n");
+        printf("O expoente não pode ser negativo para este algoritmo.\n");
     } else {
         // Chama a função para calcular a potência e exibe o resultado
         int resultado = calcularPotencia(base, expoente);

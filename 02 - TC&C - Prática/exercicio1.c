@@ -5,7 +5,7 @@
  * Imprime no arquivo as sequencias
 */
 // Função para ler e armazenar sequência em um arquivo
-void lerEArmazenarSequencia(char *nomeArquivo) {
+void lerEArmazenarSequencia(char *nomeArquivo) { // * indica que o parâmetro é um ponteiro
     FILE *arquivo;
     int numero;
 
