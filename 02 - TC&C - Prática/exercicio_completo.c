@@ -112,7 +112,7 @@ void calcularConjuntoPotencia(int conjunto[], int tamanho, FILE *arquivo) {
 void calcularConjuntosProprios(int conjunto[], int tamanho, FILE *arquivo) {
         int totalSubconjuntos = pow(2, tamanho);
 
-    for (int i = 0; i < totalSubconjuntos; i++) {
+    for (int i = 1; i < totalSubconjuntos - 1; i++) {
         fprintf(arquivo, "{ ");
 
         for (int j = 0; j < tamanho; j++) {
