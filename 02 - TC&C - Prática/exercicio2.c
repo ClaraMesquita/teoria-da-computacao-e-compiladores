@@ -48,6 +48,53 @@ void imprimirVetor(int *vetor, int n) {
     printf("\n");
 }
 
+void gerarConjunto(int sequencia[], int tamanho, int conjunto[], int *tamanhoConjunto) {
+    // Inicializar o conjunto
+    *tamanhoConjunto = 0;
+
+    // Adicionar elementos distintos ao conjunto
+    for (int i = 0; i < tamanho; i++) {
+        int elemento = sequencia[i];
+        int repetido = 0;
+
+        // Verificar se o elemento já está no conjunto
+        for (int j = 0; j < *tamanhoConjunto; j++) {
+            if (conjunto[j] == elemento) {
+                repetido = 1;
+                break;
+            }
+        }
+
+        // Adicionar elemento ao conjunto se não for repetido
+        if (!repetido) {
+            conjunto[*tamanhoConjunto] = elemento;
+            (*tamanhoConjunto)++;
+        }
+    }
+}
+
+void exibirConjunto(int conjunto[], int tamanho, const char *nomeConjunto) {
+    printf("Conjunto %s: ", nomeConjunto);
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", conjunto[i]);
+    }
+    printf("\n");
+}
+
+void armazenarConjuntoEmArquivo(int conjunto[], int tamanho, const char *nomeArquivo) {
+    FILE *arquivo = fopen(nomeArquivo, "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
+        return;
+    }
+
+    for (int i = 0; i < tamanho; i++) {
+        fprintf(arquivo, "%d\n", conjunto[i]);
+    }
+
+    fclose(arquivo);
+}
+
 int main() {
     FILE *arquivo = fopen("sequencias.txt", "w+");
     
@@ -80,10 +127,24 @@ int main() {
     imprimirVetor(sequencia1, tamanho1);
     
     printf("Sequência 2 lida do arquivo: ");
-    imprimirVetor(sequencia2, tamanho2);
+    imprimirVetor(sequencia2, tamanho1);
     
-    // Resto do código para implementar as demais funcionalidades
-    // ...
+    //
+    int tamanhoA, tamanhoB, tamanhoConjuntoA, tamanhoConjuntoB;
+    int conjuntoA[], conjuntoB[];
+    
+    gerarConjunto(sequencia1, tamanho1, conjuntoA, &tamanhoConjuntoA);
+    gerarConjunto(sequencia2, tamanho2, conjuntoB, &tamanhoConjuntoB);
+
+    exibirConjunto(conjuntoA, tamanhoConjuntoA, "A");
+    exibirConjunto(conjuntoB, tamanhoConjuntoB, "B");
+
+    armazenarConjuntoEmArquivo(conjuntoA, tamanhoConjuntoA, "sequenciaA.txt");
+    armazenarConjuntoEmArquivo(conjuntoB, tamanhoConjuntoB, "sequenciaB.txt");
+
+
+
+
     
     free(sequencia1);
     free(sequencia2);
