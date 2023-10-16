@@ -110,8 +110,21 @@ void calcularConjuntoPotencia(int conjunto[], int tamanho, FILE *arquivo) {
 
 // Função para calcular e armazenar os conjuntos próprios no arquivo
 void calcularConjuntosProprios(int conjunto[], int tamanho, FILE *arquivo) {
-    // TODO: Implemente esta função
+        int totalSubconjuntos = pow(2, tamanho);
+
+    for (int i = 0; i < totalSubconjuntos; i++) {
+        fprintf(arquivo, "{ ");
+
+        for (int j = 0; j < tamanho; j++) {
+            if ((i & (1 << j)) != 0) {
+                fprintf(arquivo, "%d ", conjunto[j]);
+            }
+        }
+
+        fprintf(arquivo, "}\n");
+    }
 }
+
 
 // Função para calcular e armazenar a união de dois conjuntos
 void calcularUniao(int conjuntoA[], int tamanhoA, int conjuntoB[], int tamanhoB, FILE *arquivo) {
@@ -289,16 +302,16 @@ int main() {
     fprintf(arquivo, "Conjunto potência de A:\n");
     calcularConjuntoPotencia(conjuntoA, tamanhoConjuntoA, arquivo);
 
-    fprintf(arquivo, "\nConjunto potência de B:\n");
+    fprintf(arquivo, "Conjunto potência de B:\n");
     calcularConjuntoPotencia(conjuntoB, tamanhoConjuntoB, arquivo);
 
     //
 
     fprintf(arquivo, "Conjuntos próprios de A:\n");
-    // calcularConjuntosProprios(conjuntoA, tamanhoConjuntoA, arquivo);
+    calcularConjuntosProprios(conjuntoA, tamanhoConjuntoA, arquivo);
 
-    fprintf(arquivo, "\nConjuntos próprios de B:\n");
-    // calcularConjuntosProprios(conjuntoB, tamanhoConjuntoB, arquivo);
+    fprintf(arquivo, "Conjuntos próprios de B:\n");
+    calcularConjuntosProprios(conjuntoB, tamanhoConjuntoB, arquivo);
 
     //
 
