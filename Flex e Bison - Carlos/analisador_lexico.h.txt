@@ -1,0 +1,5 @@
+#define ADD     1
+#define SUB     2
+#define PRINT   3
+#define STRING  4
+#define NUM     5
